@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel - Speedy Eats</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/hover-min.css" />
+    <link rel="stylesheet" href="../css/font-awesome/css/font-awesome.min.css" />
+    <style>
+        body {
+            background: #f5f6fa;
+        }
+
+        .admin-wrapper {
+            padding: 2rem 0;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs button {
+            background: #eee;
+            border: 0;
+            padding: .6rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tabs button.active {
+            background: rgb(226, 74, 74);
+            color: #fff;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: .55rem .6rem;
+            border: 1px solid #ddd;
+            font-size: .9rem;
+        }
+
+        th {
+            background: #fafafa;
+            text-align: left;
+        }
+
+        .form-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .6rem;
+            align-items: flex-end;
+            background: #fff;
+            padding: 1rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .05);
+        }
+
+        .form-inline input,
+        .form-inline select {
+            padding: .45rem .6rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .muted {
+            color: #666;
+            font-size: .8rem;
+        }
+
+        .actions button {
+            margin-right: .4rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: .7rem;
+            background: #6c5ce7;
+            color: #fff;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .logout-btn {
+            background: #6c5ce7;
+            color: #fff;
+            border: 0;
+            padding: .5rem .9rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .danger {
+            background: #e64c3c;
+        }
+
+        .success {
+            background: #2ecc71;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .status-line {
+            margin-top: .6rem;
+            font-size: .85rem;
+        }
+
+        .status-line.error {
+            color: #e64c3c;
+        }
+
+        .status-line.ok {
+            color: #2ecc71;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container admin-wrapper">
+        <div class="topbar">
+            <h2>Admin Dashboard</h2>
+            <div>
+                <span id="current-user" class="badge">...</span>
+                <button id="btn-logout" class="logout-btn">Logout</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button data-tab="categories" class="active">Categories</button>
+            <button data-tab="foods">Foods</button>
+        </div>
+
+        <div id="panel-categories" class="panel active">
+            <form id="form-category" class="form-inline">
+                <input type="hidden" name="id" />
+                <div>
+                    <label>Name<br><input name="name" required /></label>
+                </div>
+                <div>
+                    <label>Slug<br><input name="slug" placeholder="auto if blank" /></label>
+                </div>
+                <div>
+                    <button class="btn-primary" type="submit">Save Category</button>
+                    <button type="button" id="btn-cat-reset">Reset</button>
+                </div>
+            </form>
+            <div class="status-line" id="cat-status"></div>
+            <table id="tbl-categories">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Slug</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="panel-foods" class="panel">
+            <form id="form-food" class="form-inline">
+                <input type="hidden" name="id" />
+                <div>
+                    <label>Name<br><input name="name" required /></label>
+                </div>
+                <div>
+                    <label>Category<br><select name="category_id">
+                            <option value="">-- none --</option>
+                        </select></label>
+                </div>
+                <div>
+                    <label>Price (Rs)<br><input name="price" type="number" step="0.01" required /></label>
+                </div>
+                <div>
+                    <label>Image path<br><input name="image" placeholder="img/food/b1.jpg" /></label>
+                </div>
+                <div style="flex:1 0 100%">
+                    <label>Description<br><input name="description" style="width:420px" /></label>
+                </div>
+                <div>
+                    <button class="btn-primary" type="submit">Save Food</button>
+                    <button type="button" id="btn-food-reset">Reset</button>
+                </div>
+            </form>
+            <div class="status-line" id="food-status"></div>
+            <table id="tbl-foods">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const API_BASE = '../backend/php/api';
+        function apiGet(path) { return $.getJSON(API_BASE + path); }
+        function apiPost(path, data) { return $.ajax({ url: API_BASE + path, method: 'POST', data, dataType: 'json' }); }
+        function showStatus(el, msg, ok) { el.text(msg).removeClass('error ok').addClass(ok ? 'ok' : 'error'); }
+        function loadMe() { return apiGet('/auth_me.php').then(r => { if (!r.user || !r.user.is_admin) { window.location = '../login.html'; return $.Deferred().reject(); } $('#current-user').text(r.user.email + ' (admin)'); return r.user; }); }
+        function slugify(str) { return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+        // Categories
+        function loadCategories() {
+            return apiGet('/admin/categories_list.php').then(r => {
+                const tbody = $('#tbl-categories tbody').empty(); r.categories.forEach(c => { $('<tr>').append(`<td>${c.id}</td><td>${c.name}</td><td>${c.slug || ''}</td><td class='actions'><button data-act='edit' data-id='${c.id}'>Edit</button><button data-act='del' data-id='${c.id}' class='danger'>Del</button></td>`).appendTo(tbody); }); // fill category select
+                const sel = $("#form-food select[name='category_id']").empty().append(`<option value=''>-- none --</option>`); r.categories.forEach(c => sel.append(`<option value='${c.id}'>${c.name}</option>`));
+            });
+        }
+        $('#form-category').on('submit', function (e) { e.preventDefault(); const f = $(this); let data = Object.fromEntries(new FormData(this)); if (!data.slug) data.slug = slugify(data.name); const path = data.id ? '/admin/category_update.php' : '/admin/category_create.php'; apiPost(path, data).done(() => { showStatus($('#cat-status'), 'Saved', true); f[0].reset(); f.find('input[name=id]').val(''); loadCategories(); }).fail(x => showStatus($('#cat-status'), x.responseJSON?.error || 'Error', false)); });
+        $('#btn-cat-reset').on('click', () => { $('#form-category')[0].reset(); $('#form-category input[name=id]').val(''); });
+        $('#tbl-categories').on('click', 'button', function () { const id = $(this).data('id'); const act = $(this).data('act'); if (act === 'edit') { const tr = $(this).closest('tr'); $('#form-category input[name=id]').val(id); $('#form-category input[name=name]').val(tr.children().eq(1).text()); $('#form-category input[name=slug]').val(tr.children().eq(2).text()); } else if (act === 'del') { if (confirm('Delete category?')) apiPost('/admin/category_delete.php', { id }).done(() => { loadCategories(); }); } });
+        // Foods
+        function loadFoods() { return apiGet('/admin/foods_list.php').then(r => { const tbody = $('#tbl-foods tbody').empty(); r.foods.forEach(f => { $('<tr>').append(`<td>${f.id}</td><td>${f.name}</td><td>${f.category_id || ''}</td><td>${f.price}</td><td>${f.image || ''}</td><td class='actions'><button data-act='edit' data-id='${f.id}'>Edit</button><button data-act='del' data-id='${f.id}' class='danger'>Del</button></td>`).appendTo(tbody); }); }); }
+        $('#form-food').on('submit', function (e) { e.preventDefault(); const data = Object.fromEntries(new FormData(this)); const path = data.id ? '/admin/food_update.php' : '/admin/food_create.php'; apiPost(path, data).done(() => { showStatus($('#food-status'), 'Saved', true); this.reset(); $(this).find('input[name=id]').val(''); loadFoods(); }).fail(x => showStatus($('#food-status'), x.responseJSON?.error || 'Error', false)); });
+        $('#btn-food-reset').on('click', () => { $('#form-food')[0].reset(); $('#form-food input[name=id]').val(''); });
+        $('#tbl-foods').on('click', 'button', function () { const id = $(this).data('id'); const act = $(this).data('act'); if (act === 'edit') { const tr = $(this).closest('tr'); $('#form-food input[name=id]').val(id); $('#form-food input[name=name]').val(tr.children().eq(1).text()); $('#form-food select[name=category_id]').val(tr.children().eq(2).text()); $('#form-food input[name=price]').val(tr.children().eq(3).text()); $('#form-food input[name=image]').val(tr.children().eq(4).text()); } else if (act === 'del') { if (confirm('Delete food?')) apiPost('/admin/food_delete.php', { id }).done(() => loadFoods()); } });
+        // Tabs
+        $('.tabs button').on('click', function () { $('.tabs button').removeClass('active'); $(this).addClass('active'); const tab = $(this).data('tab'); $('.panel').removeClass('active'); $('#panel-' + tab).addClass('active'); });
+        $('#btn-logout').on('click', () => { apiPost('/auth_logout.php', {}).always(() => window.location = '../login.html'); });
+        $(function () { loadMe().then(() => Promise.all([loadCategories(), loadFoods()])); });
+    </script>
+</body>
+
+</html>
